@@ -22,9 +22,9 @@
 | ato           | Bloco de comandos              |
 
 ## 🚀 Executando
-1. Instale o PLY:
+1. Instale as dependencias:
 ```bash
-pip install ply
+pip install -r requirements.txt
 ```
 
 2. Execute um arquivo `.palco`:
