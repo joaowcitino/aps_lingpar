@@ -1,0 +1,12 @@
+apresentar {
+  personagem contador = 0;
+  repetir (contador < 5) {
+    fala (contador);
+    contador = contador + 1;
+  }
+  se (contador == 5) {
+    fala ("Fim do ato!");
+  } senao {
+    fala ("O show continua...");
+  }
+} encerrar
