@@ -1,0 +1,51 @@
+ESPETACULO_COMECA
+ABRE_CORTINA
+  protagonista numero = 17!!
+  protagonista i = 2!!
+  protagonista eh_primo = 1!!
+  
+  se << numero MENOR_IGUAL_A 1 >> ABRE_CORTINA
+    eh_primo = 0!!
+  FECHA_CORTINA senao ABRE_CORTINA
+    repetir << i * i MENOR_IGUAL_A numero >> ABRE_CORTINA
+      se << numero / i * i IGUAL_A numero >> ABRE_CORTINA
+        eh_primo = 0!!
+      FECHA_CORTINA
+      i = i + 1!!
+    FECHA_CORTINA
+  FECHA_CORTINA
+  
+  fala<< "Número: " >>!!
+  fala<< numero >>!!
+  
+  se << eh_primo IGUAL_A 1 >> ABRE_CORTINA
+    fala<< "É primo!" >>!!
+  FECHA_CORTINA senao ABRE_CORTINA
+    fala<< "Não é primo!" >>!!
+  FECHA_CORTINA
+  
+  numero = 15!!
+  i = 2!!
+  eh_primo = 1!!
+  
+  se << numero MENOR_IGUAL_A 1 >> ABRE_CORTINA
+    eh_primo = 0!!
+  FECHA_CORTINA senao ABRE_CORTINA
+    repetir << i * i MENOR_IGUAL_A numero >> ABRE_CORTINA
+      se << numero / i * i IGUAL_A numero >> ABRE_CORTINA
+        eh_primo = 0!!
+      FECHA_CORTINA
+      i = i + 1!!
+    FECHA_CORTINA
+  FECHA_CORTINA
+  
+  fala<< "Número: " >>!!
+  fala<< numero >>!!
+  
+  se << eh_primo IGUAL_A 1 >> ABRE_CORTINA
+    fala<< "É primo!" >>!!
+  FECHA_CORTINA senao ABRE_CORTINA
+    fala<< "Não é primo!" >>!!
+  FECHA_CORTINA
+FECHA_CORTINA
+ESPETACULO_TERMINA

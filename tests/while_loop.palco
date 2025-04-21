@@ -1,0 +1,11 @@
+ESPETACULO_COMECA
+ABRE_CORTINA
+  protagonista contador = 1!!
+  
+  repetir << contador MENOR_IGUAL_A 5 >> ABRE_CORTINA
+    fala<< "Contador: " >>!!
+    fala<< contador >>!!
+    contador = contador + 1!!
+  FECHA_CORTINA
+FECHA_CORTINA
+ESPETACULO_TERMINA

@@ -1,0 +1,24 @@
+ESPETACULO_COMECA
+ABRE_CORTINA
+  cenario titulo = "Sorteio de Números"!!
+  fala<< titulo >>!!
+  fala<< "-------------------" >>!!
+  
+  protagonista quantidade = 5!!
+  protagonista i = 0!!
+  
+  fala<< "Sorteando " >>!!
+  fala<< quantidade >>!!
+  fala<< " números entre 1 e 100:" >>!!
+  
+  caminhar << i = 0!! i MENOR_QUE quantidade!! i = i + 1 >> ABRE_CORTINA
+    protagonista sorteio = improviso<< 100 >> + 1!!
+    fala<< "Número " >>!!
+    fala<< i + 1 >>!!
+    fala<< ": " >>!!
+    fala<< sorteio >>!!
+  FECHA_CORTINA
+  
+  fala<< "Sorteio concluído!" >>!!
+FECHA_CORTINA
+ESPETACULO_TERMINA

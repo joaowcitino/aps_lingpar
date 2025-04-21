@@ -1,0 +1,86 @@
+ESPETACULO_COMECA
+ABRE_CORTINA
+  cenario titulo = "✨ Jogo da Adivinhação ✨"!!
+  cenario linha = "------------------------"!!
+  cenario instrucoes = "Tente adivinhar o número entre 1 e 100!"!!
+  cenario dica_maior = "Dica: O número secreto é MAIOR que seu palpite!"!!
+  cenario dica_menor = "Dica: O número secreto é MENOR que seu palpite!"!!
+  cenario vitoria = "🎉 Parabéns! Você acertou! 🎉"!!
+  
+  protagonista numero_secreto = improviso<< 100 >> + 1!!
+  protagonista palpite = 0!!
+  protagonista tentativas = 0!!
+  protagonista max_tentativas = 10!!
+  protagonista continuar = 1!!
+  
+  cena Introducao
+  ABRE_CORTINA
+    fala<< titulo >>!!
+    fala<< linha >>!!
+    fala<< instrucoes >>!!
+    fala<< "Você tem direito a " >>!!
+    fala<< max_tentativas >>!!
+    fala<< " tentativas." >>!!
+    fala<< linha >>!!
+  FECHA_CORTINA
+  
+  cena LerPalpite
+  ABRE_CORTINA
+    se << tentativas IGUAL_A 1 >> ABRE_CORTINA
+      palpite = 50!!
+    FECHA_CORTINA senao ABRE_CORTINA
+      se << palpite MENOR_QUE numero_secreto >> ABRE_CORTINA
+        palpite = palpite + (((numero_secreto - palpite) / 2) + 1)!!
+      FECHA_CORTINA senao ABRE_CORTINA
+        palpite = palpite - (((palpite - numero_secreto) / 2) + 1)!!
+      FECHA_CORTINA
+    FECHA_CORTINA
+    
+    fala<< "Seu palpite: " >>!!
+    fala<< palpite >>!!
+  FECHA_CORTINA
+  
+  cena VerificarPalpite
+  ABRE_CORTINA
+    tentativas = tentativas + 1!!
+    
+    se << palpite IGUAL_A numero_secreto >> ABRE_CORTINA
+      fala<< vitoria >>!!
+      fala<< "Você acertou em " >>!!
+      fala<< tentativas >>!!
+      fala<< " tentativas!" >>!!
+      continuar = 0!!
+    FECHA_CORTINA senao ABRE_CORTINA
+      se << tentativas MAIOR_IGUAL_A max_tentativas >> ABRE_CORTINA
+        fala<< "Suas tentativas acabaram!" >>!!
+        fala<< "O número secreto era: " >>!!
+        fala<< numero_secreto >>!!
+        continuar = 0!!
+      FECHA_CORTINA senao ABRE_CORTINA
+        se << palpite MENOR_QUE numero_secreto >> ABRE_CORTINA
+          fala<< dica_maior >>!!
+        FECHA_CORTINA senao ABRE_CORTINA
+          fala<< dica_menor >>!!
+        FECHA_CORTINA
+        
+        fala<< "Tentativas restantes: " >>!!
+        fala<< max_tentativas - tentativas >>!!
+        fala<< linha >>!!
+      FECHA_CORTINA
+    FECHA_CORTINA
+  FECHA_CORTINA
+  
+  ato ABRE_CORTINA
+    Introducao
+    
+    repetir << continuar IGUAL_A 1 >> ABRE_CORTINA
+      LerPalpite
+      VerificarPalpite
+    FECHA_CORTINA
+    
+    fala<< linha >>!!
+    fala<< "Fim do jogo! Obrigado por jogar!" >>!!
+  FECHA_CORTINA
+  
+FECHA_CORTINA
+ESPETACULO_TERMINA

@@ -1,0 +1,6 @@
+ESPETACULO_COMECA
+ABRE_CORTINA
+  cenario mensagem = "Olá, Mundo do Teatro!"!!
+  fala<< mensagem >>!!
+FECHA_CORTINA
+ESPETACULO_TERMINA

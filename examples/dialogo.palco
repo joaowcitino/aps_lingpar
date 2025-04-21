@@ -1,0 +1,54 @@
+ESPETACULO_COMECA
+ABRE_CORTINA
+  cenario personagem1 = "Hamlet"!!
+  cenario personagem2 = "Horácio"!!
+  
+  cena Saudacao
+  ABRE_CORTINA
+    fala<< personagem1 >>!!
+    fala<< ": Olá, meu bom amigo." >>!!
+    
+    fala<< personagem2 >>!!
+    fala<< ": Que os deuses te protejam, meu príncipe." >>!!
+  FECHA_CORTINA
+  
+  cena Reflexao
+  ABRE_CORTINA
+    fala<< personagem1 >>!!
+    fala<< ": Ser ou não ser, eis a questão." >>!!
+    
+    fala<< personagem2 >>!!
+    fala<< ": Que pensamentos te atormentam?" >>!!
+    
+    fala<< personagem1 >>!!
+    fala<< ": A existência e seus mistérios." >>!!
+  FECHA_CORTINA
+  
+  cena Despedida
+  ABRE_CORTINA
+    fala<< personagem1 >>!!
+    fala<< ": Adeus, por ora." >>!!
+    
+    fala<< personagem2 >>!!
+    fala<< ": Até breve, meu príncipe." >>!!
+  FECHA_CORTINA
+  
+  ato ABRE_CORTINA
+    fala<< "--- Ato I: Encontro ---" >>!!
+    Saudacao
+    fala<< "----------------------" >>!!
+  FECHA_CORTINA
+  
+  ato ABRE_CORTINA
+    fala<< "--- Ato II: Discussão ---" >>!!
+    Reflexao
+    fala<< "------------------------" >>!!
+  FECHA_CORTINA
+  
+  ato ABRE_CORTINA
+    fala<< "--- Ato III: Partida ---" >>!!
+    Despedida
+    fala<< "----------------------" >>!!
+  FECHA_CORTINA
+FECHA_CORTINA
+ESPETACULO_TERMINA

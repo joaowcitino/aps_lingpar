@@ -1,0 +1,20 @@
+ESPETACULO_COMECA
+ABRE_CORTINA
+  protagonista n = 5!!
+  protagonista fatorial = 1!!
+  protagonista i = 1!!
+  
+  fala<< "Calculando o fatorial de " >>!!
+  fala<< n >>!!
+  
+  repetir << i MENOR_IGUAL_A n >> ABRE_CORTINA
+    fatorial = fatorial * i!!
+    i = i + 1!!
+  FECHA_CORTINA
+  
+  fala<< "O fatorial de " >>!!
+  fala<< n >>!!
+  fala<< " é " >>!!
+  fala<< fatorial >>!!
+FECHA_CORTINA
+ESPETACULO_TERMINA

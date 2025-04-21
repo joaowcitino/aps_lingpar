@@ -1,0 +1,24 @@
+ESPETACULO_COMECA
+ABRE_CORTINA
+  protagonista n = 10!!
+  protagonista a = 0!!
+  protagonista b = 1!!
+  protagonista i = 0!!
+  protagonista temp = 0!!
+  
+  fala<< "Sequência de Fibonacci com " >>!!
+  fala<< n >>!!
+  fala<< " termos:" >>!!
+  
+  fala<< a >>!!
+  fala<< b >>!!
+  
+  caminhar << i = 2!! i MENOR_QUE n!! i = i + 1 >> ABRE_CORTINA
+    temp = b!!
+    b = a + b!!
+    a = temp!!
+    
+    fala<< b >>!!
+  FECHA_CORTINA
+FECHA_CORTINA
+ESPETACULO_TERMINA

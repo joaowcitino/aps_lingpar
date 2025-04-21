@@ -1,0 +1,141 @@
+ESPETACULO_COMECA
+ABRE_CORTINA
+  cenario titulo = "🧮 Calculadora Teatral 🧮"!!
+  cenario separador = "--------------------------------"!!
+  cenario menu = "Escolha a operação:
+  1. Adição (+)
+  2. Subtração (-)
+  3. Multiplicação (*)
+  4. Divisão (/)
+  5. Sair"!!
+  
+  protagonista numero1 = 0!!
+  protagonista numero2 = 0!!
+  protagonista operacao = 0!!
+  protagonista resultado = 0!!
+  protagonista continuar = 1!!
+  
+  cena BoasVindas
+  ABRE_CORTINA
+    fala<< titulo >>!!
+    fala<< separador >>!!
+    fala<< "Bem-vindo à calculadora mais teatral do mundo!" >>!!
+    fala<< "Onde os números são os protagonistas e as operações, o enredo." >>!!
+    fala<< separador >>!!
+  FECHA_CORTINA
+  
+  cena ObterNumeros
+  ABRE_CORTINA
+    numero1 = 10!!
+    numero2 = 5!!
+    
+    fala<< "Primeiro número: " >>!!
+    fala<< numero1 >>!!
+    
+    fala<< "Segundo número: " >>!!
+    fala<< numero2 >>!!
+  FECHA_CORTINA
+  
+  cena EscolherOperacao
+  ABRE_CORTINA
+    fala<< menu >>!!
+    
+    operacao = improviso<< 4 >> + 1!!
+    
+    fala<< "Operação escolhida: " >>!!
+    fala<< operacao >>!!
+  FECHA_CORTINA
+  
+  cena Calcular
+  ABRE_CORTINA
+    se << operacao IGUAL_A 1 >> ABRE_CORTINA
+      resultado = numero1 + numero2!!
+      fala<< "Adição: " >>!!
+    FECHA_CORTINA senao ABRE_CORTINA
+      se << operacao IGUAL_A 2 >> ABRE_CORTINA
+        resultado = numero1 - numero2!!
+        fala<< "Subtração: " >>!!
+      FECHA_CORTINA senao ABRE_CORTINA
+        se << operacao IGUAL_A 3 >> ABRE_CORTINA
+          resultado = numero1 * numero2!!
+          fala<< "Multiplicação: " >>!!
+        FECHA_CORTINA senao ABRE_CORTINA
+          se << operacao IGUAL_A 4 >> ABRE_CORTINA
+            se << numero2 IGUAL_A 0 >> ABRE_CORTINA
+              fala<< "Erro: Divisão por zero não é permitida!" >>!!
+              resultado = 0!!
+            FECHA_CORTINA senao ABRE_CORTINA
+              resultado = numero1 / numero2!!
+              fala<< "Divisão: " >>!!
+            FECHA_CORTINA
+          FECHA_CORTINA senao ABRE_CORTINA
+            se << operacao IGUAL_A 5 >> ABRE_CORTINA
+              continuar = 0!!
+              fala<< "Saindo da calculadora..." >>!!
+            FECHA_CORTINA senao ABRE_CORTINA
+              fala<< "Opção inválida. Tente novamente." >>!!
+            FECHA_CORTINA
+          FECHA_CORTINA
+        FECHA_CORTINA
+      FECHA_CORTINA
+    FECHA_CORTINA
+    
+    se << operacao MAIOR_IGUAL_A 1 E_TAMBEM operacao MENOR_IGUAL_A 4 >> ABRE_CORTINA
+      fala<< numero1 >>!!
+      
+      se << operacao IGUAL_A 1 >> ABRE_CORTINA
+        fala<< " + " >>!!
+      FECHA_CORTINA senao ABRE_CORTINA
+        se << operacao IGUAL_A 2 >> ABRE_CORTINA
+          fala<< " - " >>!!
+        FECHA_CORTINA senao ABRE_CORTINA
+          se << operacao IGUAL_A 3 >> ABRE_CORTINA
+            fala<< " * " >>!!
+          FECHA_CORTINA senao ABRE_CORTINA
+            fala<< " / " >>!!
+          FECHA_CORTINA
+        FECHA_CORTINA
+      FECHA_CORTINA
+      
+      fala<< numero2 >>!!
+      fala<< " = " >>!!
+      fala<< resultado >>!!
+    FECHA_CORTINA
+  FECHA_CORTINA
+  
+  cena ContinuarCalculadora
+  ABRE_CORTINA
+    protagonista contador_estatico = 0!!
+    contador_estatico = contador_estatico + 1!!
+    
+    se << contador_estatico MAIOR_IGUAL_A 3 >> ABRE_CORTINA
+      continuar = 0!!
+      fala<< "Calculadora encerrada após 3 operações." >>!!
+    FECHA_CORTINA senao ABRE_CORTINA
+      fala<< separador >>!!
+      fala<< "Próxima operação:" >>!!
+    FECHA_CORTINA
+  FECHA_CORTINA
+  
+  ato ABRE_CORTINA
+    BoasVindas
+    
+    repetir << continuar IGUAL_A 1 >> ABRE_CORTINA
+      ObterNumeros
+      EscolherOperacao
+      Calcular
+      
+      se << continuar IGUAL_A 1 >> ABRE_CORTINA
+        ContinuarCalculadora
+      FECHA_CORTINA
+    FECHA_CORTINA
+    
+    ato ABRE_CORTINA
+      fala<< separador >>!!
+      fala<< "Obrigado por usar a Calculadora Teatral!" >>!!
+      fala<< "Até a próxima apresentação!" >>!!
+    FECHA_CORTINA
+  FECHA_CORTINA
+  
+FECHA_CORTINA
+ESPETACULO_TERMINA
