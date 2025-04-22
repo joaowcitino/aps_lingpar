@@ -1,8 +1,6 @@
-# Makefile para TechFlow
-
 CC = gcc
-CFLAGS = -Wall -Wextra -g
-LDFLAGS = -lLLVM
+CFLAGS = -Wall -Wextra -g $(shell llvm-config --cflags)
+LDFLAGS = $(shell llvm-config --ldflags --libs)
 
 # Diretórios
 SRC_DIR = src
@@ -13,7 +11,7 @@ TEST_DIR = test
 # Arquivos gerados pelo Flex e Bison
 LEXER_SRC = $(SRC_DIR)/lexer/lexer.c
 PARSER_SRC = $(SRC_DIR)/parser/parser.c
-PARSER_HDR = $(SRC_DIR)/parser/parser.tab.h
+PARSER_HDR = $(SRC_DIR)/parser/parser.h
 
 # Fontes
 SOURCES = $(SRC_DIR)/main.c \
