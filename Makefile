@@ -1,6 +1,9 @@
+# Makefile para TechFlow
+
 CC = gcc
-CFLAGS = -Wall -Wextra -g $(shell llvm-config --cflags)
-LDFLAGS = $(shell llvm-config --ldflags --libs)
+CFLAGS = -Wall -Wextra -g
+LLVM_CFLAGS = $(shell llvm-config --cflags)
+LLVM_LDFLAGS = $(shell llvm-config --ldflags --libs)
 
 # Diretórios
 SRC_DIR = src
@@ -11,7 +14,7 @@ TEST_DIR = test
 # Arquivos gerados pelo Flex e Bison
 LEXER_SRC = $(SRC_DIR)/lexer/lexer.c
 PARSER_SRC = $(SRC_DIR)/parser/parser.c
-PARSER_HDR = $(SRC_DIR)/parser/parser.h
+PARSER_HDR = $(SRC_DIR)/parser/parser.tab.h
 
 # Fontes
 SOURCES = $(SRC_DIR)/main.c \
@@ -40,11 +43,11 @@ directories:
 
 # Compilar executável
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LLVM_LDFLAGS)
 
 # Compilar arquivos objeto
 $(BUILD_DIR)/%.o: %.c
-	$(CC) $(CFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
+	$(CC) $(CFLAGS) $(LLVM_CFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
 
 # Gerar lexer com Flex
 $(LEXER_SRC): $(SRC_DIR)/lexer/lexer.l $(PARSER_HDR)
