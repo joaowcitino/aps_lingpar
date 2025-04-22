@@ -57,12 +57,6 @@ static CodegenContext *init_codegen_context(const char *module_name) {
     
     ctx->var_capacity = 100;
     ctx->var_count = 0;
-    typedef struct {
-        char *name;
-        LLVMValueRef value;
-        int scope;
-    } VarEntry;
-
     ctx->variables = (VarEntry*)malloc(ctx->var_capacity * sizeof(VarEntry));
     
     if (!ctx->variables) {
@@ -523,7 +517,7 @@ static bool codegen_for_loop(CodegenContext *ctx, ASTNode *for_loop) {
 
         LLVMPositionBuilderAtEnd(ctx->builder, loop_block);
 
-        LLVMValueRef current_count = LLVMBuildLoad2(ctx->builder, LLVMTypeOf(counter), counter, "current.count");
+        LLVMValueRef current_count = LLVMBuildLoad22(ctx->builder, LLVMTypeOf(counter), counter, "current.count");
 
         LLVMBuildStore(ctx->builder, current_count, iterator);
 
@@ -649,7 +643,7 @@ static LLVMValueRef codegen_function_call(CodegenContext *ctx, ASTNode *func_cal
     }
 
     LLVMTypeRef func_type = LLVMGetElementType(LLVMTypeOf(func));
-    LLVMValueRef result = LLVMBuildCall2(ctx->builder, func_type, func, args, arg_count, "");
+    LLVMValueRef result = LLVMBuildCall22(ctx->builder, func_type, func, args, arg_count, "");
 
     if (args) {
         free(args);
@@ -697,7 +691,7 @@ static bool codegen_log(CodegenContext *ctx, ASTNode *log) {
     LLVMValueRef format_str = LLVMBuildGlobalStringPtr(ctx->builder, format, "format");
 
     LLVMValueRef args[] = { format_str, expr };
-    LLVMBuildCall(ctx->builder, printf_func, args, 2, "");
+    LLVMBuildCall2(ctx->builder, printf_func, args, 2, "");
     
     return true;
 }
@@ -714,7 +708,7 @@ static LLVMValueRef codegen_expression(CodegenContext *ctx, ASTNode *expr) {
                 fprintf(stderr, "Erro: Variável '%s' não definida\n", expr->data.identifier.name);
                 return NULL;
             }
-            return LLVMBuildLoad(ctx->builder, var, expr->data.identifier.name);
+            return LLVMBuildLoad2(ctx->builder, var, expr->data.identifier.name);
         }
         
         case AST_NUMBER:
