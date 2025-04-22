@@ -10,23 +10,25 @@
 #include "../semantic/symbol_table.h"
 
 typedef struct {
+    char *name;
+    LLVMValueRef value;
+    int scope;
+} VarEntry;
+
+typedef struct {
     LLVMContextRef context;
     LLVMModuleRef module;
     LLVMBuilderRef builder;
     SymbolTable *symbol_table;
-    
-    struct {
-        char *name;
-        LLVMValueRef value;
-        int scope;
-    } *variables;
+
+    VarEntry *variables;
     int var_count;
     int var_capacity;
-    
+
     int current_scope;
-    
+
     LLVMValueRef current_return;
-    
+
     LLVMBasicBlockRef return_block;
 } CodegenContext;
 
@@ -55,8 +57,13 @@ static CodegenContext *init_codegen_context(const char *module_name) {
     
     ctx->var_capacity = 100;
     ctx->var_count = 0;
-    ctx->variables = (struct { char *name; LLVMValueRef value; int scope; })
-                     malloc(ctx->var_capacity * sizeof(*ctx->variables));
+    typedef struct {
+        char *name;
+        LLVMValueRef value;
+        int scope;
+    } VarEntry;
+
+    ctx->variables = (VarEntry*)malloc(ctx->var_capacity * sizeof(VarEntry));
     
     if (!ctx->variables) {
         fprintf(stderr, "Erro: Falha ao alocar memória para mapeamento de variáveis\n");
@@ -99,8 +106,7 @@ static void add_variable(CodegenContext *ctx, const char *name, LLVMValueRef val
     
     if (ctx->var_count >= ctx->var_capacity) {
         ctx->var_capacity *= 2;
-        ctx->variables = (struct { char *name; LLVMValueRef value; int scope; })
-                        realloc(ctx->variables, ctx->var_capacity * sizeof(*ctx->variables));
+        ctx->variables = (VarEntry*)realloc(ctx->variables, ctx->var_capacity * sizeof(VarEntry));
         
         if (!ctx->variables) {
             fprintf(stderr, "Erro: Falha ao realocar memória para mapeamento de variáveis\n");
@@ -517,7 +523,7 @@ static bool codegen_for_loop(CodegenContext *ctx, ASTNode *for_loop) {
 
         LLVMPositionBuilderAtEnd(ctx->builder, loop_block);
 
-        LLVMValueRef current_count = LLVMBuildLoad(ctx->builder, counter, "current.count");
+        LLVMValueRef current_count = LLVMBuildLoad2(ctx->builder, LLVMTypeOf(counter), counter, "current.count");
 
         LLVMBuildStore(ctx->builder, current_count, iterator);
 
@@ -642,7 +648,8 @@ static LLVMValueRef codegen_function_call(CodegenContext *ctx, ASTNode *func_cal
         }
     }
 
-    LLVMValueRef result = LLVMBuildCall(ctx->builder, func, args, arg_count, "");
+    LLVMTypeRef func_type = LLVMGetElementType(LLVMTypeOf(func));
+    LLVMValueRef result = LLVMBuildCall2(ctx->builder, func_type, func, args, arg_count, "");
 
     if (args) {
         free(args);
