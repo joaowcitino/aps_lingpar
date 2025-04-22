@@ -1,3 +1,4 @@
+
 # 🧠 TechFlow – Uma Linguagem de Programação Inclusiva
 
 TechFlow é uma linguagem de programação educacional e inclusiva, projetada para ensinar os conceitos fundamentais de programação com uma sintaxe acessível e divertida, inspirada em termos tecnológicos como `boot`, `ping`, `module`, `chip`, etc.
@@ -26,44 +27,58 @@ Ela suporta **variáveis**, **condicionais**, **laços**, **funções**, **expre
 ## 🚀 Como executar
 
 ### 1. Clone o projeto
+
+```
 git clone https://github.com/joaowcitino/aps_lingpar.git
 cd aps_lingpar
+```
 
 ### 2. Instale o ambiente
 
 Requer Python 3.10+ e LLVM instalado (com `lli` e `clang` no PATH)
 
+```
 sudo apt install llvm clang
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+```
 
 ### 3. Compile um programa `.tf`
 
+```
 python3 main.py tests/01_variavel_log.tf
+```
 
 ### 4. Execute com LLVM
 
+```
 lli out.ll
+```
 
 Ou, se preferir:
 
+```
 clang out.ll -o out
 ./out
+```
 
 ---
 
 ## 🧪 Exemplos
 
-Código: `tests/01_variavel_log.tf`
+### Código: `tests/01_variavel_log.tf`
 
+```
 boot main
   byte x = 42
   log x
 shutdown main
+```
 
-Código com função + condição + loop
+### Código com função + condição + loop
 
+```
 boot main
   module soma(a, b) process
     return a + b
@@ -84,11 +99,13 @@ boot main
     log i
   loop_end
 shutdown main
+```
 
 ---
 
 ## 🔧 Estrutura do projeto
 
+```
 techflow/
 ├── lexer.py              # Analisador léxico (PLY)
 ├── parser.py             # Analisador sintático + AST
@@ -97,6 +114,7 @@ techflow/
 ├── main.py               # Entrada principal
 ├── tests/                # Arquivos de teste (.tf)
 └── out.ll                # Código LLVM IR gerado
+```
 
 ---
 
@@ -111,22 +129,23 @@ A linguagem TechFlow foi projetada para:
 
 ## 💬 Sintaxe da linguagem
 
-Elemento       | Exemplo
----------------|-------------------------------
-Início/fim     | boot main ... shutdown main
-Variável       | byte x = 10 + 5
-Log            | log x
-Condicional    | ping x == 5 process ... pong process
-Loop for       | loop 3 as i process ... loop_end
-Loop while     | stream x < 5 process ... stream_end
-Função         | module nome(a, b) process ... module_end
-Return         | return a + b
-Chamada função | soma(2, 3)
+| Elemento       | Exemplo                                      |
+|----------------|-----------------------------------------------|
+| Início/fim     | `boot main` ... `shutdown main`              |
+| Variável       | `byte x = 10 + 5`                            |
+| Log            | `log x`                                      |
+| Condicional    | `ping x == 5 process` ... `pong process`     |
+| Loop for       | `loop 3 as i process` ... `loop_end`         |
+| Loop while     | `stream x < 5 process` ... `stream_end`      |
+| Função         | `module nome(a, b) process` ... `module_end` |
+| Return         | `return a + b`                               |
+| Chamada função | `soma(2, 3)`                                 |
 
 ---
 
 ## 🛠️ Como o compilador funciona
 
+```
 [Arquivo .tf] 
    ↓
 [PLY Lexer & Parser]
@@ -138,6 +157,7 @@ Chamada função | soma(2, 3)
 [LLVM IR (.ll)] 
    ↓
 [lli ou clang] → Execução ou binário
+```
 
 ---
 
