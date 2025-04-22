@@ -38,10 +38,10 @@ $(BUILD_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
 
 $(LEXER_SRC): $(SRC_DIR)/lexer/lexer.l $(PARSER_HDR)
-	flex -o $@ $
+	flex -o $@ $<
 
 $(PARSER_SRC) $(PARSER_HDR): $(SRC_DIR)/parser/parser.y
-	bison -d -o $(PARSER_SRC) $
+	bison -d -o $(PARSER_SRC) $<
 
 clean:
 	rm -rf $(BUILD_DIR)

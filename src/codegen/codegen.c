@@ -167,7 +167,7 @@ bool generate_code(ASTNode *ast_root, const char *input_filename) {
     }
     
     LLVMTypeRef printf_arg_types[] = { LLVMPointerType(LLVMInt8Type(), 0) };
-    LLVMTypeRef printf_type = LLVMFunctionType(LLVMInt32Type(), printf_arg_types, 1, true);
+    // LLVMTypeRef printf_type = LLVMFunctionType(LLVMInt32Type(), printf_arg_types, 1, true);
     // LLVMValueRef printf_func = LLVMAddFunction(ctx->module, "printf", printf_type);
     
     ASTNode *current = ast_root->data.program.declarations;
@@ -517,7 +517,7 @@ static bool codegen_for_loop(CodegenContext *ctx, ASTNode *for_loop) {
 
         LLVMPositionBuilderAtEnd(ctx->builder, loop_block);
 
-        LLVMValueRef current_count = LLVMBuildLoad22(ctx->builder, LLVMTypeOf(counter), counter, "current.count");
+        LLVMValueRef current_count = LLVMBuildLoad2(ctx->builder, LLVMTypeOf(counter), counter, "current.count");
 
         LLVMBuildStore(ctx->builder, current_count, iterator);
 
