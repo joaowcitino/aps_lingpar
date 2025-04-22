@@ -167,8 +167,8 @@ bool generate_code(ASTNode *ast_root, const char *input_filename) {
     }
     
     LLVMTypeRef printf_arg_types[] = { LLVMPointerType(LLVMInt8Type(), 0) };
-    // LLVMTypeRef printf_type = LLVMFunctionType(LLVMInt32Type(), printf_arg_types, 1, true);
-    // LLVMValueRef printf_func = LLVMAddFunction(ctx->module, "printf", printf_type);
+    LLVMTypeRef printf_type = LLVMFunctionType(LLVMInt32Type(), printf_arg_types, 1, true);
+    LLVMValueRef printf_func = LLVMAddFunction(ctx->module, "printf", printf_type);
     
     ASTNode *current = ast_root->data.program.declarations;
     bool result = true;

@@ -38,14 +38,17 @@ $(BUILD_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
 
 $(LEXER_SRC): $(SRC_DIR)/lexer/lexer.l $(PARSER_HDR)
-	flex -o $@ $<
+	flex -o $@ $
 
 $(PARSER_SRC) $(PARSER_HDR): $(SRC_DIR)/parser/parser.y
-	bison -d -o $(PARSER_SRC) $<
+	bison -d -o $(PARSER_SRC) $
+	@if [ ! -f $(PARSER_HDR) ]; then \
+		cp $(SRC_DIR)/parser/parser.h $(PARSER_HDR); \
+	fi
 
 clean:
 	rm -rf $(BUILD_DIR)
-	rm -f $(LEXER_SRC) $(PARSER_SRC) $(PARSER_HDR)
+	rm -f $(LEXER_SRC) $(PARSER_SRC) $(SRC_DIR)/parser/parser.h $(PARSER_HDR)
 
 test: all
 	./scripts/test.sh
