@@ -168,7 +168,7 @@ bool generate_code(ASTNode *ast_root, const char *input_filename) {
     
     LLVMTypeRef printf_arg_types[] = { LLVMPointerType(LLVMInt8Type(), 0) };
     LLVMTypeRef printf_type = LLVMFunctionType(LLVMInt32Type(), printf_arg_types, 1, true);
-    LLVMValueRef printf_func = LLVMAddFunction(ctx->module, "printf", printf_type);
+    // LLVMValueRef printf_func = LLVMAddFunction(ctx->module, "printf", printf_type);
     
     ASTNode *current = ast_root->data.program.declarations;
     bool result = true;
@@ -492,7 +492,7 @@ static bool codegen_for_loop(CodegenContext *ctx, ASTNode *for_loop) {
 
     enter_scope_codegen(ctx);
 
-    LLVMBasicBlockRef preheader_block = LLVMGetInsertBlock(ctx->builder);
+    // LLVMBasicBlockRef preheader_block = LLVMGetInsertBlock(ctx->builder);
     LLVMBasicBlockRef loop_block = LLVMAppendBasicBlock(current_func, "loop");
     LLVMBasicBlockRef after_block = LLVMAppendBasicBlock(current_func, "loop.end");
 
@@ -617,7 +617,7 @@ static LLVMValueRef codegen_function_call(CodegenContext *ctx, ASTNode *func_cal
         current = current->data.args.next;
     }
 
-    if (arg_count != LLVMCountParams(func)) {
+    if (arg_count != (int)LLVMCountParams(func)) {
         fprintf(stderr, "Erro: Número incorreto de argumentos na chamada de '%s'. Esperado %u, recebido %d\n", 
                 func_call->data.function_call.name, LLVMCountParams(func), arg_count);
         return NULL;
@@ -643,7 +643,7 @@ static LLVMValueRef codegen_function_call(CodegenContext *ctx, ASTNode *func_cal
     }
 
     LLVMTypeRef func_type = LLVMGetElementType(LLVMTypeOf(func));
-    LLVMValueRef result = LLVMBuildCall22(ctx->builder, func_type, func, args, arg_count, "");
+    LLVMValueRef result = LLVMBuildCall2(ctx->builder, func_type, func, args, arg_count, "");
 
     if (args) {
         free(args);
@@ -691,7 +691,7 @@ static bool codegen_log(CodegenContext *ctx, ASTNode *log) {
     LLVMValueRef format_str = LLVMBuildGlobalStringPtr(ctx->builder, format, "format");
 
     LLVMValueRef args[] = { format_str, expr };
-    LLVMBuildCall2(ctx->builder, printf_func, args, 2, "");
+    LLVMBuildCall2(ctx->builder, LLVMGetElementType(LLVMTypeOf(printf_func)), printf_func, args, 2, "");
     
     return true;
 }
@@ -708,21 +708,26 @@ static LLVMValueRef codegen_expression(CodegenContext *ctx, ASTNode *expr) {
                 fprintf(stderr, "Erro: Variável '%s' não definida\n", expr->data.identifier.name);
                 return NULL;
             }
-            return LLVMBuildLoad2(ctx->builder, var, expr->data.identifier.name);
+            return LLVMBuildLoad2(ctx->builder, LLVMTypeOf(var), var, expr->data.identifier.name);
+            break;
         }
         
         case AST_NUMBER:
             return LLVMConstInt(LLVMInt32Type(), expr->data.number.value, false);
+            break;
         
         case AST_STRING:
             return LLVMBuildGlobalStringPtr(ctx->builder, expr->data.string.value, "string");
+            break;
         
         case AST_ARRAY:
             fprintf(stderr, "Aviso: Arrays não implementados completamente\n");
             return LLVMConstNull(LLVMPointerType(LLVMInt32Type(), 0));
+            break;
         
         case AST_FUNCTION_CALL:
             return codegen_function_call(ctx, expr);
+            break;
         
         case AST_BINARY_EXPR: {
             LLVMValueRef left = codegen_expression(ctx, expr->data.binary_expr.left);
@@ -775,6 +780,7 @@ static LLVMValueRef codegen_expression(CodegenContext *ctx, ASTNode *expr) {
                     fprintf(stderr, "Erro: Operador desconhecido\n");
                     return NULL;
             }
+            break;
         }
         
         default:
