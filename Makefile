@@ -21,6 +21,7 @@ SOURCES = $(SRC_DIR)/main.c \
           $(SRC_DIR)/semantic/semantic.c \
           $(SRC_DIR)/semantic/symbol_table.c \
           $(SRC_DIR)/codegen/codegen.c \
+          $(SRC_DIR)/parser/ast.c \
           $(LEXER_SRC) \
           $(PARSER_SRC)
 
