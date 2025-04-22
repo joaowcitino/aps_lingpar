@@ -1,19 +1,52 @@
-# Arquivos Python compilados
-__pycache__/
-*.pyc
+# Arquivos gerados pelo Flex e Bison
+src/lexer/lexer.c
+src/parser/parser.c
+src/parser/parser.tab.h
 
-# Ambiente virtual
-venv/
-.env/
+# Arquivos objeto e executáveis
+build/
+*.o
+*.out
+*.exe
 
-# Arquivos temporários
-*.log
-*.tmp
+# Arquivos gerados pelo LLVM
+*.bc
+*.ll
+*.s
 
-# IDEs
-.vscode/
-.idea/
-
-# Sistemas operacionais
+# Arquivos temporários do sistema
+*~
+.*.swp
 .DS_Store
 Thumbs.db
+
+# Arquivos de IDE/editor
+.vscode/
+.idea/
+*.sublime-*
+.project
+.cproject
+.settings/
+
+# Arquivos de log
+*.log
+
+# Arquivos de backup
+*.bak
+
+# Arquivos de compilação
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile.in
+config.h.in
+configure
+autom4te.cache/
+aclocal.m4
+
+# Dependências externas
+lib/external/
+
+# Arquivos específicos do usuário
+.env
+.env.local

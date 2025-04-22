@@ -1,0 +1,52 @@
+(* Gramática EBNF para a linguagem TechFlow *)
+
+(* Definição do programa *)
+programa = "boot", identificador, declaracoes, "shutdown", identificador;
+
+(* Declarações *)
+declaracoes = {declaracao};
+declaracao = declaracao_variavel | estrutura_controle | chamada_funcao | definicao_funcao | saida;
+
+(* Variáveis *)
+declaracao_variavel = tipo, identificador, "=", expressao;
+tipo = "byte" | "bit" | "chip";
+
+(* Estruturas de Controle *)
+estrutura_controle = condicional | loop_for | loop_while;
+
+(* Condicional *)
+condicional = "scan_begin", bloco_condicional, "scan_end";
+bloco_condicional = {bloco_if}, [bloco_else];
+bloco_if = "ping", expressao, "process", declaracoes, "ping_end";
+bloco_else = "pong", "process", declaracoes, "pong_end";
+
+(* Loop For *)
+loop_for = "loop", expressao, "as", identificador, "process", declaracoes, "loop_end";
+
+(* Loop While *)
+loop_while = "stream", expressao, "process", declaracoes, "stream_end";
+
+(* Funções *)
+definicao_funcao = "module", identificador, "(", [parametros], ")", "process", declaracoes, [retorno], "module_end";
+parametros = identificador, {",", identificador};
+retorno = "return", expressao;
+chamada_funcao = identificador, "(", [argumentos], ")";
+argumentos = expressao, {",", expressao};
+
+(* Expressões *)
+expressao = termo, {operador, termo};
+termo = identificador | literal | chamada_funcao | "(", expressao, ")";
+operador = "+" | "-" | "*" | "/" | "==" | "!=" | ">" | "<" | ">=" | "<=" | "&&" | "||";
+
+(* Saída *)
+saida = "log", expressao;
+
+(* Elementos básicos *)
+identificador = letra, {letra | digito};
+letra = "a".."z" | "A".."Z" | "_";
+digito = "0".."9";
+literal = string | numero | array;
+string = '"', {qualquer_caracter}, '"';
+numero = digito, {digito};
+array = "[", [expressao, {",", expressao}], "]";
+qualquer_caracter = ? todos os caracteres exceto aspas duplas ?;

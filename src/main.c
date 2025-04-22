@@ -1,46 +1,63 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "ast.h"
-#include "llvm_generator.h"
-#include "symbol_table.h"
+#include <string.h>
+#include "parser/ast.h"
+#include "semantic/semantic.h"
+#include "codegen/codegen.h"
 
-extern FILE* yyin;
-extern int yyparse();
-extern ASTNode* root;
+extern FILE *yyin;
+extern int yyparse(void);
+extern ASTNode *ast_root;
 
-int main(int argc, char** argv) {
-    if (argc < 2) {
-        fprintf(stderr, "Uso: %s arquivo.palco\n", argv[0]);
+void print_usage(char *program_name) {
+    printf("Uso: %s <arquivo.tf>\n", program_name);
+}
+
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        print_usage(argv[0]);
         return 1;
     }
-    
-    FILE* file = fopen(argv[1], "r");
-    if (!file) {
-        fprintf(stderr, "Erro ao abrir o arquivo %s\n", argv[1]);
+
+    FILE *input_file = fopen(argv[1], "r");
+    if (!input_file) {
+        fprintf(stderr, "Erro: Não foi possível abrir o arquivo '%s'\n", argv[1]);
         return 1;
     }
-    
-    yyin = file;
-    
-    init_symbol_table();
-    
+
+    yyin = input_file;
+
+    printf("Analisando arquivo '%s'...\n", argv[1]);
     int parse_result = yyparse();
-    fclose(file);
+
+    fclose(input_file);
     
-    if (parse_result != 0 || !root) {
-        fprintf(stderr, "Erro na análise sintática\n");
+    if (parse_result != 0 || !ast_root) {
+        fprintf(stderr, "Erro: Falha na análise sintática\n");
         return 1;
     }
     
-    LLVMGenerator* generator = init_llvm_generator("palco_module");
-    generate_code(generator, root);
-    write_bitcode_to_file(generator, "output.bc");
+    printf("Análise sintática concluída com sucesso\n");
+
+    printf("Executando análise semântica...\n");
+    if (!analyze_semantics(ast_root)) {
+        fprintf(stderr, "Erro: Falha na análise semântica\n");
+        free_ast(ast_root);
+        return 1;
+    }
     
-    printf("Compilação concluída. Bitcode gerado em output.bc\n");
+    printf("Análise semântica concluída com sucesso\n");
+
+    printf("Gerando código LLVM...\n");
+    if (!generate_code(ast_root, argv[1])) {
+        fprintf(stderr, "Erro: Falha na geração de código\n");
+        free_ast(ast_root);
+        return 1;
+    }
     
-    cleanup_llvm_generator(generator);
-    free_ast_node(root);
-    cleanup_symbol_table();
+    printf("Código LLVM gerado com sucesso\n");
+
+    free_ast(ast_root);
     
     return 0;
 }

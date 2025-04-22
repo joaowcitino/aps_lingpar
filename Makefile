@@ -1,22 +1,53 @@
 CC = gcc
-CFLAGS = -Wall -g
-LIBS = `llvm-config --cflags --ldflags --libs core executionengine mcjit native bitwriter` -lfl
+CFLAGS = -Wall -Wextra -g
+LDFLAGS = -lLLVM
 
-all: palco
+SRC_DIR = src
+BUILD_DIR = build
+INCLUDE_DIR = include
+TEST_DIR = test
 
-palco: lex.yy.c palco.tab.c src/ast.c src/llvm_generator.c src/symbol_table.c src/main.c
-	$(CC) $(CFLAGS) -o palco $^ $(LIBS)
+LEXER_SRC = $(SRC_DIR)/lexer/lexer.c
+PARSER_SRC = $(SRC_DIR)/parser/parser.c
+PARSER_HDR = $(SRC_DIR)/parser/parser.tab.h
 
-lex.yy.c: src/palco.l palco.tab.h
-	flex -o lex.yy.c src/palco.l
+SOURCES = $(SRC_DIR)/main.c \
+          $(SRC_DIR)/semantic/semantic.c \
+          $(SRC_DIR)/semantic/symbol_table.c \
+          $(SRC_DIR)/codegen/codegen.c \
+          $(LEXER_SRC) \
+          $(PARSER_SRC)
 
-palco.tab.c palco.tab.h: src/palco.y
-	bison -d src/palco.y
+OBJECTS = $(SOURCES:%.c=$(BUILD_DIR)/%.o)
 
-test: palco
-	./test_suite.sh
+EXECUTABLE = $(BUILD_DIR)/techflow
+
+all: directories $(EXECUTABLE)
+
+directories:
+	@mkdir -p $(BUILD_DIR)
+	@mkdir -p $(BUILD_DIR)/$(SRC_DIR)/lexer
+	@mkdir -p $(BUILD_DIR)/$(SRC_DIR)/parser
+	@mkdir -p $(BUILD_DIR)/$(SRC_DIR)/semantic
+	@mkdir -p $(BUILD_DIR)/$(SRC_DIR)/codegen
+
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+$(BUILD_DIR)/%.o: %.c
+	$(CC) $(CFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
+
+$(LEXER_SRC): $(SRC_DIR)/lexer/lexer.l $(PARSER_HDR)
+	flex -o $@ $
+
+$(PARSER_SRC) $(PARSER_HDR): $(SRC_DIR)/parser/parser.y
+	bison -d -o $(PARSER_SRC) $
 
 clean:
-	rm -f palco lex.yy.c palco.tab.c palco.tab.h output.bc *.o
+	rm -rf $(BUILD_DIR)
+	rm -f $(LEXER_SRC) $(PARSER_SRC) $(PARSER_HDR)
 
-.PHONY: all clean test
+test: all
+	./scripts/test.sh
+
+.PHONY: all directories clean test
