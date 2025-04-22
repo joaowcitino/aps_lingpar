@@ -1,52 +1,83 @@
-(* Gramática EBNF para a linguagem TechFlow *)
+(* =====================================================
+   TechFlow - Gramática EBNF
+   Linguagem inclusiva com suporte a variáveis, controle de fluxo, funções, etc.
+   ===================================================== *)
 
-(* Definição do programa *)
-programa = "boot", identificador, declaracoes, "shutdown", identificador;
+(* Programa completo *)
+programa       = "boot", identificador, declaracoes, "shutdown", identificador ;
 
-(* Declarações *)
-declaracoes = {declaracao};
-declaracao = declaracao_variavel | estrutura_controle | chamada_funcao | definicao_funcao | saida;
+(* Lista de declarações *)
+declaracoes    = { declaracao } ;
 
-(* Variáveis *)
-declaracao_variavel = tipo, identificador, "=", expressao;
-tipo = "byte" | "bit" | "chip";
+(* Tipos de declaração *)
+declaracao     = declaracao_variavel
+               | estrutura_controle
+               | chamada_funcao
+               | definicao_funcao
+               | comando_saida
+               | comando_retorno ;
 
-(* Estruturas de Controle *)
-estrutura_controle = condicional | loop_for | loop_while;
+(* Tipos de variáveis *)
+declaracao_variavel = tipo, identificador, "=", expressao ;
 
-(* Condicional *)
-condicional = "scan_begin", bloco_condicional, "scan_end";
-bloco_condicional = {bloco_if}, [bloco_else];
-bloco_if = "ping", expressao, "process", declaracoes, "ping_end";
-bloco_else = "pong", "process", declaracoes, "pong_end";
+tipo           = "byte" | "bit" | "chip" ;
 
-(* Loop For *)
-loop_for = "loop", expressao, "as", identificador, "process", declaracoes, "loop_end";
+(* Estruturas de controle *)
+estrutura_controle = condicional
+                   | loop_para
+                   | loop_enquanto ;
 
-(* Loop While *)
-loop_while = "stream", expressao, "process", declaracoes, "stream_end";
+(* Condicional estilo if-else *)
+condicional    = "ping", expressao, "process", declaracoes, "ping_end",
+                 [ "pong", "process", declaracoes, "pong_end" ] ;
 
-(* Funções *)
-definicao_funcao = "module", identificador, "(", [parametros], ")", "process", declaracoes, [retorno], "module_end";
-parametros = identificador, {",", identificador};
-retorno = "return", expressao;
-chamada_funcao = identificador, "(", [argumentos], ")";
-argumentos = expressao, {",", expressao};
+(* Loop estilo for *)
+loop_para      = "loop", expressao, "as", identificador, "process", declaracoes, "loop_end" ;
 
-(* Expressões *)
-expressao = termo, {operador, termo};
-termo = identificador | literal | chamada_funcao | "(", expressao, ")";
-operador = "+" | "-" | "*" | "/" | "==" | "!=" | ">" | "<" | ">=" | "<=" | "&&" | "||";
+(* Loop estilo while *)
+loop_enquanto  = "stream", expressao, "process", declaracoes, "stream_end" ;
 
-(* Saída *)
-saida = "log", expressao;
+(* Definição de função *)
+definicao_funcao = "module", identificador, "(", [ parametros ], ")",
+                   "process", declaracoes,
+                   [ comando_retorno ],
+                   "module_end" ;
+
+parametros     = identificador, { ",", identificador } ;
+
+(* Chamada de função *)
+chamada_funcao = identificador, "(", [ argumentos ], ")" ;
+
+argumentos     = expressao, { ",", expressao } ;
+
+(* Comando de saída *)
+comando_saida  = "log", expressao ;
+
+(* Comando de retorno *)
+comando_retorno = "return", expressao ;
+
+(* Expressões aritméticas e lógicas *)
+expressao      = termo, { operador, termo } ;
+
+termo          = identificador
+               | literal
+               | chamada_funcao
+               | "(", expressao, ")" ;
+
+operador       = "+" | "-" | "*" | "/" 
+               | "==" | "!=" | ">" | "<" | ">=" | "<=" ;
 
 (* Elementos básicos *)
-identificador = letra, {letra | digito};
-letra = "a".."z" | "A".."Z" | "_";
-digito = "0".."9";
-literal = string | numero | array;
-string = '"', {qualquer_caracter}, '"';
-numero = digito, {digito};
-array = "[", [expressao, {",", expressao}], "]";
-qualquer_caracter = ? todos os caracteres exceto aspas duplas ?;
+identificador  = letra, { letra | digito } ;
+
+letra          = "a" .. "z" | "A" .. "Z" | "_" ;
+
+digito         = "0" .. "9" ;
+
+literal        = string | numero ;
+
+string         = '"', { qualquer_caractere }, '"' ;
+
+numero         = digito, { digito } ;
+
+qualquer_caractere = ? qualquer caractere exceto aspas duplas ? ;
