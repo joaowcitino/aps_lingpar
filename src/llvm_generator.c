@@ -147,9 +147,7 @@ void generate_llvm_code(Node* ast_root, const char* output_file) {
     LLVMDisposeMessage(error);
     
     LLVMPassManagerRef pass_manager = LLVMCreatePassManager();
-    
-    // Fix função não encontrada
-    // LLVMAddPromoteMemoryToRegisterPass(pass_manager);
+
     LLVMAddInstructionCombiningPass(pass_manager);
     LLVMAddReassociatePass(pass_manager);
     LLVMAddGVNPass(pass_manager);
@@ -204,7 +202,6 @@ static LLVMValueRef generate_node(Node* node, GeneratorContext* context) {
                 fprintf(stderr, "Erro: Variável '%s' não definida\n", node->data.str_value);
                 exit(1);
             }
-            // Substitui LLVMBuildLoad (deprecated) por LLVMBuildLoad2
             return LLVMBuildLoad2(context->builder, symbol->type, symbol->value, node->data.str_value);
         }
         default:
@@ -322,22 +319,19 @@ static LLVMValueRef generate_binary_op(Node* node, GeneratorContext* context) {
             LLVMTypeRef func_type = LLVMFunctionType(ret_type, param_types, 2, 0);
             concat_func = LLVMAddFunction(context->module, "concat_strings", func_type);
         }
-        
-        // Verificar o tipo do operando esquerdo e converter se for inteiro
+
         LLVMTypeRef left_type = LLVMTypeOf(left);
         if (LLVMGetTypeKind(left_type) == LLVMIntegerTypeKind && 
             LLVMGetIntTypeWidth(left_type) == 32) {
             left = int_to_string(context, left);
         }
-        
-        // Verificar o tipo do operando direito e converter se for inteiro
+
         LLVMTypeRef right_type = LLVMTypeOf(right);
         if (LLVMGetTypeKind(right_type) == LLVMIntegerTypeKind && 
             LLVMGetIntTypeWidth(right_type) == 32) {
             right = int_to_string(context, right);
         }
-        
-        // Chamar a função de concatenação
+
         LLVMTypeRef func_type = LLVMGetElementType(LLVMTypeOf(concat_func));
         LLVMValueRef args[] = { left, right };
         return LLVMBuildCall2(context->builder, func_type, concat_func, args, 2, "concat_result");
@@ -489,8 +483,7 @@ static LLVMValueRef generate_print_stmt(Node* node, GeneratorContext* context) {
                 LLVMTypeRef func_type = LLVMFunctionType(ret_type, param_types, 1, 0);
                 bool_to_str_func = LLVMAddFunction(context->module, "bool_to_string", func_type);
             }
-            
-            // Substitui LLVMBuildCall (deprecated) por LLVMBuildCall2
+
             LLVMTypeRef func_type = LLVMGetElementType(LLVMTypeOf(bool_to_str_func));
             LLVMValueRef args[] = { expr };
             expr = LLVMBuildCall2(context->builder, func_type, bool_to_str_func, args, 1, "bool_str");
@@ -502,8 +495,7 @@ static LLVMValueRef generate_print_stmt(Node* node, GeneratorContext* context) {
     }
     
     LLVMValueRef format_str = LLVMBuildGlobalStringPtr(context->builder, format, "format");
-    
-    // Substitui LLVMBuildCall (deprecated) por LLVMBuildCall2
+
     LLVMTypeRef func_type = LLVMGetElementType(LLVMTypeOf(printf_func));
     LLVMValueRef args[] = { format_str, expr };
     return LLVMBuildCall2(context->builder, func_type, printf_func, args, 2, "printf_result");

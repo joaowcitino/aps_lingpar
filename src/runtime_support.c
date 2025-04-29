@@ -22,9 +22,8 @@ char* concat_strings(const char* str1, const char* str2) {
     return result;
 }
 
-// Nova função: converte int para string
 char* int_to_string(int int_value) {
-    char* buffer = (char*)malloc(20); // Suficiente para qualquer int de 32 bits
+    char* buffer = (char*)malloc(20);
     if (!buffer) {
         fprintf(stderr, "Erro: Falha na alocação de memória\n");
         exit(1);
