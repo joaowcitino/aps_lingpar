@@ -1,15 +1,18 @@
-# Ambiente virtual
+# Ambiente virtual Python
 venv/
 ENV/
 env/
 .venv/
 
-# Bytecode e caches
+# Bytecode e caches Python
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
 *.so
+.pytest_cache/
+.coverage
+htmlcov/
 
 # Logs temporários
 *.log
@@ -24,3 +27,32 @@ parser.out
 # Arquivos de backup do editor
 *~
 *.swp
+*.swo
+.vscode/
+.idea/
+*.sublime-*
+
+# Arquivos C/C++ e LLVM
+*.o
+*.obj
+*.bc
+*.ll
+*.s
+src/lex.yy.c
+src/parser.tab.c
+src/parser.tab.h
+
+# Executáveis e binários
+bin/
+programa
+techflow_compiler
+*.exe
+*.out
+*.app
+
+# Arquivos de saída
+output.*
+
+# Diretórios temporários
+tmp/
+temp/
