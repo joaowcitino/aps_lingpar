@@ -7,13 +7,13 @@ SRC_DIR = src
 BIN_DIR = bin
 EXAMPLES_DIR = examples
 
-all: check_dirs $(BIN_DIR)/techflow_compiler $(SRC_DIR)/runtime_support.o
+all: check_dirs $(BIN_DIR)/techflow $(SRC_DIR)/runtime_support.o
 
 check_dirs:
 	@mkdir -p $(BIN_DIR)
 	@mkdir -p $(EXAMPLES_DIR)
 
-$(BIN_DIR)/techflow_compiler: $(SRC_DIR)/main.o $(SRC_DIR)/parser.tab.o $(SRC_DIR)/lex.yy.o $(SRC_DIR)/interpreter.o $(SRC_DIR)/llvm_generator.o
+$(BIN_DIR)/techflow: $(SRC_DIR)/main.o $(SRC_DIR)/parser.tab.o $(SRC_DIR)/lex.yy.o $(SRC_DIR)/interpreter.o $(SRC_DIR)/llvm_generator.o
 	$(CC) $(CFLAGS) -o $@ $^ $(LLVM_LDFLAGS)
 
 $(SRC_DIR)/main.o: $(SRC_DIR)/main.c $(SRC_DIR)/llvm_generator.h
@@ -41,15 +41,15 @@ $(SRC_DIR)/lex.yy.o: $(SRC_DIR)/lex.yy.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(BIN_DIR)/techflow_compiler $(SRC_DIR)/*.o $(SRC_DIR)/lex.yy.c $(SRC_DIR)/parser.tab.c $(SRC_DIR)/parser.tab.h *.bc programa
+	rm -f $(BIN_DIR)/techflow $(SRC_DIR)/*.o $(SRC_DIR)/lex.yy.c $(SRC_DIR)/parser.tab.c $(SRC_DIR)/parser.tab.h *.bc programa
 
 .PHONY: all clean check_dirs
 
-test-interpret: $(BIN_DIR)/techflow_compiler
-	$(BIN_DIR)/techflow_compiler $(EXAMPLES_DIR)/teste.tf --interpret
+test-interpret: $(BIN_DIR)/techflow
+	$(BIN_DIR)/techflow $(EXAMPLES_DIR)/teste.tf --interpret
 
-test-compile: $(BIN_DIR)/techflow_compiler
-	$(BIN_DIR)/techflow_compiler $(EXAMPLES_DIR)/teste.tf --compile
+test-compile: $(BIN_DIR)/techflow
+	$(BIN_DIR)/techflow $(EXAMPLES_DIR)/teste.tf --compile
 
 test-run: test-compile
 	@echo "Compilando bitcode para executável..."

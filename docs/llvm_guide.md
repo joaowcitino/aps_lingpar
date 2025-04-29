@@ -22,13 +22,13 @@ brew install llvm
 Para compilar um programa TechFlow para LLVM IR, use a opção `--compile`:
 
 ```bash
-./bin/techflow_compiler examples/teste.tf --compile
+./bin/techflow examples/teste.tf --compile
 ```
 
 Por padrão, isso gera um arquivo `output.bc` no diretório atual. Você pode especificar um nome de arquivo diferente:
 
 ```bash
-./bin/techflow_compiler examples/teste.tf --compile --output=meu_programa.bc
+./bin/techflow examples/teste.tf --compile --output=meu_programa.bc
 ```
 
 ## Executando o código LLVM compilado

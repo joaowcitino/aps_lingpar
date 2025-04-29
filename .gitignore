@@ -45,7 +45,7 @@ src/parser.tab.h
 # Executáveis e binários
 bin/
 programa
-techflow_compiler
+techflow
 *.exe
 *.out
 *.app

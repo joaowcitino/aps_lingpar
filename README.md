@@ -94,13 +94,13 @@ Existem três formas de executar programas TechFlow:
 #### 1. Interpretação (mais rápida para desenvolvimento)
 
 ```bash
-./bin/techflow_compiler examples/teste.tf --interpret
+./bin/techflow examples/teste.tf --interpret
 ```
 
 #### 2. Compilação para LLVM IR
 
 ```bash
-./bin/techflow_compiler examples/teste.tf --compile
+./bin/techflow examples/teste.tf --compile
 ```
 
 #### 3. Compilação completa e execução
